@@ -1,38 +1,106 @@
 $(document).ready(function() {
-
     // default values
     const defaultChairs = 100;
     const defaultMS = 200;
 
+    var chairLL, lastDeletedNode;
+    var counter = 1;
+
     //initial load of default size
     josephus.loadChairs(defaultChairs);
-
+    chairLL = josephus.createLinkedList(defaultChairs);
 
     $('#btn_chairsCount').click(function () {
+        var chairCounter = $('#chairsCount').val();
+        var milliseconds = $('#milliseconds').val();
+
+        //clear chairs block
         $('.output_block').html('');
 
-        var count = $('#chairsCount').val();
-        if (count < 1 || count > 1000 ) {
+        if (chairCounter < 1 || chairCounter > 1000 ) {
             $('.output_block').html('Chairs count out of range (must be between 1 and 1000)');
         } else {
-            josephus.loadChairs(count);
+            counter = 1;
+            josephus.loadChairs(chairCounter);
+
+            //empty LL so we don't add to it
+            chairLL = josephus.createLinkedList(chairCounter);
         }
     });
 
+
     $('#btn_runSimulation').click(function () {
-        var count = $('#chairsCount').val();
+        // get data from input fields
+        var chairCounter = $('#chairsCount').val();
         var milliseconds = $('#milliseconds').val();
 
+
         //change button behaviour to have pause functionality
-        $(this).toggleClass('pause');
-        josephus(count, milliseconds);
+        //$(this).toggleClass('pause');
+
+
+        // run delete simulation
+        var node;
+        var intervalID;
+
+        //get start node
+        if (counter == 1) {
+            node = chairLL.head;
+        } else {
+            // we're not starting on the head because we picked up from a partially run simulation
+            node = josephus.getNextChair(chairLL, counter, lastDeletedNode);
+        }
+
+        intervalID = setInterval(function() {
+
+            //if list size > 1 delete node
+            if (chairLL.size > 1) {
+                chairLL = josephus.removeChair(chairLL, node);
+                counter++;
+
+                node = josephus.getNextChair(chairLL, counter, node);
+            } else {
+                clearInterval(intervalID);
+                josephus.displayResults(chairCounter, node.data);
+            }
+        }, milliseconds);
     });
+
+
+    $('#btn_singleStep').click(function () {
+        var chairCounter = $('#chairsCount').val();
+
+        // run single step delete simulation
+        var node;
+
+        //get start node
+        if (counter == 1) {
+            node = chairLL.head;
+        } else {
+            node = josephus.getNextChair(chairLL, counter, lastDeletedNode);
+        }
+
+        //if list size > 1 delete node
+        if (chairLL.size != 1) {
+            chairLL = josephus.removeChair(chairLL, node);
+            counter++;
+
+            //track the deleted node so we can pass it back in for single steps
+            lastDeletedNode = node;
+        } else {
+            josephus.displayResults(chairCounter, node.data);
+        }
+    });
+
 
     $('#btn_reset').click(function () {
         $('#chairsCount').val(defaultChairs);
         $('#milliseconds').val(defaultMS);
         $('.output_block').html('');
-        loadChairs(defaultChairs);
+
+        counter = 1;
+        josephus.loadChairs(defaultChairs);
+        chairLL = josephus.createLinkedList(defaultChairs);
     });
 
 });
@@ -64,47 +132,52 @@ var josephus = (function(){
     }
 
 
-    function josephus(n, ms) {
+    function _createLinkedList(n) {
         // create a circular linked list to represent the chairs
         // data in each node will be the number of the node since we need to know the "number" of who survives
         // this way we can circle around
         // n is the number of nodes (elements / chairs)
 
-        // this isn't a true josephus algorithm so need to tweak it a bit
-        // 1) first person to leave is HEAD
-        // 2) counter for people to leave is n+1 from the round before (so just counter++ each time)
-        // to test, manually calculated if n=10, final result is 7
-
         var jCLL = new circularLinkedList();
-        var counter = 1;                                // start at node to remove
-        var node;
-        var intervalID;
-        var lastMan;
 
         //create and populate a circular linked list with data
         for (var i = 0; i < n; i++) {
             jCLL.add(i + 1);
         }
+        return jCLL;
+    }
 
-        node = jCLL.head;
 
-        intervalID = setInterval(function(){
-            if (jCLL.size > 1) {
-                jCLL.deleteNode(node.data);
-                $('.circle-container div#chair-' + node.data).remove();
-                counter++;
-                node = jCLL.traverse(counter, node);
-            } else {
-                clearInterval(intervalID);
+    function _removeChair(cll, chair) {
+        // this isn't a true josephus algorithm so need to tweak it a bit
+        // 1) first person to leave is HEAD
+        // 2) counter for people to leave is n+1 from the round before (so just counter++ each time)
+        // to test, manually calculated if n=10, final result is 7
 
-                console.log('last person alive: ' + node.data);
-                $('.output_block').html('Final survivor for a count of ' + n + ' chairs is ' + node.data);
-            }
-        }, ms);
+        cll.deleteNode(chair.data);
+        $('.circle-container div#chair-' + chair.data).remove();
+        return cll;
+    }
+
+
+    function _getNextChair(cll, index, chair) {
+        //return node of next chair to delete
+        return cll.traverse(index, chair);
+    }
+
+    function _displayResults(count, data) {
+        // single data is the last survivor
+        console.log('last person alive: ' + data);
+        $('.output_block').html('Final survivor for a count of ' + count + ' chairs is ' + data);
     }
 
     return {
-        loadChairs:     _loadChairs
+        loadChairs:         _loadChairs,
+        createLinkedList:   _createLinkedList,
+        removeChair:        _removeChair,
+        getNextChair:       _getNextChair,
+        displayResults:     _displayResults
+
 
     }
 })();
