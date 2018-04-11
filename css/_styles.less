@@ -1,0 +1,88 @@
+body#josephusChairs {
+  * {
+    font-family: 'Source Sans Pro';
+  }
+
+  height: 100%;
+
+  button {
+    background: #F6F6F6;
+  }
+
+  input {
+    border: 1px solid #C4CDD5;
+    background: linear-gradient(#FFFFFF, #F9FAFB);
+    width: 100px;
+  }
+
+  .left-action {
+    width: 30%;
+    height: 100%;
+    display: block;
+    background: #F6F6F6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 40px;
+
+    .button_block {
+      padding-top: 30px;
+
+      .chairs_block {
+      }
+
+      .runReset_block {
+        padding-top: 20px;
+
+        #btn_runSimulation {
+          display: inline-block;
+        }
+
+        #btn_singleStep {
+          display: inline-block;
+          background-color: #c4cdd5;
+        }
+
+        #btn_reset {
+          display: inline-block;
+        }
+      }
+    }//button_block
+
+    .output_block {
+      padding-top: 30px;
+    }
+  }//left-action
+
+  .right-draw {
+    width: 70%;
+    height: 100%;
+    float: right;
+
+    .circle-container {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      margin-top: 180px;
+      transform: translateX(-30%);
+      left: 50%;
+
+      div {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -25px;
+
+        span {
+          left: -10px;
+        }
+      }
+
+      img {
+        width: 15px;
+        height: 15px;
+      }
+    }//circle-container
+  }//right-draw
+}//josephusChairs

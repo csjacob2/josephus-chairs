@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="scripts/jquery-3.2.1.min.js"></script>
+    <script src="scripts/circularLinkedList.js"></script>
+    <script src="scripts/main.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,600" rel="stylesheet">
+
+</head>
+<body id="josephusChairs">
+
+    <div class="left-action">
+
+        <div class="description">
+            This simulation represents a modified version of the Josephus problem. Given the inputs of a number of chairs and a timer value, it visualizes the elimination of the participants using the timer as the delay between eliminations. Additionally you may step through the simulation manually by using the remove chair button.
+        </div>
+
+        <div class="button_block">
+            <div class="chairs_block">
+                <div>
+                    <input id="chairsCount" value="100" type="number" min="1" max="1000" pattern="[0-9]+" maxlength="4"></input>
+                    <button id="btn_chairsCount">Chairs</button>
+                </div>
+                <div>
+                    <input id="milliseconds" value="200" type="number" step="10" min="0"></input> ms
+                </div>
+            </div>
+
+            <div class="runReset_block">
+                <button id="btn_runSimulation" class="pause">Run Simulation</button>
+                <button id="btn_singleStep">Single Step</button>
+                <button id="btn_reset">Reset</button>
+            </div>
+        </div>
+
+        <div class="output_block">
+        </div>
+    </div>
+
+    <div class="right-draw">
+        <div class="circle-container">
+        </div>
+    </div>
+
+</body>
+</html>

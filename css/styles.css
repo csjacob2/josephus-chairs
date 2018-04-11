@@ -1,0 +1,70 @@
+body#josephusChairs {
+  height: 100%;
+}
+body#josephusChairs * {
+  font-family: 'Source Sans Pro';
+}
+body#josephusChairs button {
+  background: #F6F6F6;
+}
+body#josephusChairs input {
+  border: 1px solid #C4CDD5;
+  background: linear-gradient(#FFFFFF, #F9FAFB);
+  width: 100px;
+}
+body#josephusChairs .left-action {
+  width: 30%;
+  height: 100%;
+  display: block;
+  background: #F6F6F6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 40px;
+}
+body#josephusChairs .left-action .button_block {
+  padding-top: 30px;
+}
+body#josephusChairs .left-action .button_block .runReset_block {
+  padding-top: 20px;
+}
+body#josephusChairs .left-action .button_block .runReset_block #btn_runSimulation {
+  display: inline-block;
+}
+body#josephusChairs .left-action .button_block .runReset_block #btn_singleStep {
+  display: inline-block;
+  background-color: #c4cdd5;
+}
+body#josephusChairs .left-action .button_block .runReset_block #btn_reset {
+  display: inline-block;
+}
+body#josephusChairs .left-action .output_block {
+  padding-top: 30px;
+}
+body#josephusChairs .right-draw {
+  width: 70%;
+  height: 100%;
+  float: right;
+}
+body#josephusChairs .right-draw .circle-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin-top: 180px;
+  transform: translateX(-30%);
+  left: 50%;
+}
+body#josephusChairs .right-draw .circle-container div {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -25px;
+}
+body#josephusChairs .right-draw .circle-container div span {
+  left: -10px;
+}
+body#josephusChairs .right-draw .circle-container img {
+  width: 15px;
+  height: 15px;
+}
