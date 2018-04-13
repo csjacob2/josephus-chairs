@@ -3,8 +3,9 @@ $(document).ready(function() {
     const defaultChairs = 100;
     const defaultMS = 200;
 
-    var chairLL, lastDeletedNode, node, milliseconds, intervalID;
+    var chairLL, lastDeletedNode, node, milliseconds;
     var counter = 1;
+    var intervalID = '';
 
     //initial load of default size
     josephus.loadChairs(defaultChairs);
@@ -26,6 +27,7 @@ $(document).ready(function() {
             lastDeletedNode = Object.assign({});
             josephus.loadChairs(chairCounter);
             chairLL = josephus.createLinkedList(chairCounter);
+            clearInterval(intervalID);
         }
     });
 
@@ -116,7 +118,9 @@ $(document).ready(function() {
 
         counter = 1;
         intervalID = '';
+        milliseconds = defaultMS;
         lastDeletedNode = Object.assign({});
+        clearInterval(intervalID);
         josephus.loadChairs(defaultChairs);
         chairLL = josephus.createLinkedList(defaultChairs);
     });
