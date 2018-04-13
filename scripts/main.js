@@ -3,7 +3,7 @@ $(document).ready(function() {
     const defaultChairs = 100;
     const defaultMS = 200;
 
-    var chairLL, lastDeletedNode;
+    var chairLL, lastDeletedNode, node, milliseconds, intervalID;
     var counter = 1;
 
     //initial load of default size
@@ -11,73 +11,88 @@ $(document).ready(function() {
     chairLL = josephus.createLinkedList(defaultChairs);
 
     $('#btn_chairsCount').click(function () {
-        var chairCounter = $('#chairsCount').val();
-        var milliseconds = $('#milliseconds').val();
+        var chairCounter = $('#input_chairsCount').val();
+        milliseconds = $('#input_milliseconds').val();
 
         //clear chairs block
         $('.output_block').html('');
+        $('#btn_runSimulation').html('Run Simulation').addClass('pause');
 
         if (chairCounter < 1 || chairCounter > 1000 ) {
             $('.output_block').html('Chairs count out of range (must be between 1 and 1000)');
         } else {
             counter = 1;
+            intervalID = '';
+            lastDeletedNode = Object.assign({});
             josephus.loadChairs(chairCounter);
-
-            //empty LL so we don't add to it
             chairLL = josephus.createLinkedList(chairCounter);
         }
     });
 
 
-    $('#btn_runSimulation').click(function () {
-        // get data from input fields
-        var chairCounter = $('#chairsCount').val();
-        var milliseconds = $('#milliseconds').val();
+    $('#btn_runSimulation').click(function (e) {
+        var chairCounter = $('#input_chairsCount').val();
+        milliseconds = $('#input_milliseconds').val();
 
+        //change button behaviour to have pause functionality and capture last node
+        $(this).toggleClass('pause');
 
-        //change button behaviour to have pause functionality
-        //$(this).toggleClass('pause');
+        if ($('#btn_runSimulation').hasClass('pause')) {
+            // we're in pause state
+            $('#btn_runSimulation').html('Run Simulation');
 
-
-        // run delete simulation
-        var node;
-        var intervalID;
-
-        //get start node
-        if (counter == 1) {
-            node = chairLL.head;
         } else {
-            // we're not starting on the head because we picked up from a partially run simulation
-            node = josephus.getNextChair(chairLL, counter, lastDeletedNode);
+            // we're not in pause state
+            $('#btn_runSimulation').html('Pause Simulation');
+
+            if (counter == 1) {
+                // this is initial start state, set head node
+                node = Object.assign(chairLL.head);
+            } else {
+                // we're not starting on the head because we picked up from a partially run simulation
+                node = Object.assign(josephus.getNextChair(chairLL, counter, lastDeletedNode));
+            }
         }
 
+        // run delete simulation
         intervalID = setInterval(function() {
 
-            //if list size > 1 delete node
-            if (chairLL.size > 1) {
-                chairLL = josephus.removeChair(chairLL, node);
-                counter++;
+            if($('#btn_runSimulation').hasClass('pause')) {
+                // we're in pause state
+                // we're still running the interval timer, just not doing anything
 
-                node = josephus.getNextChair(chairLL, counter, node);
             } else {
-                clearInterval(intervalID);
-                josephus.displayResults(chairCounter, node.data);
+
+                //only run the deletion if the button isn't set to pause
+                // this doesn't technically pause the interval timer
+
+                //if list size > 1 delete node
+                if (chairLL.size > 1) {
+                    chairLL = josephus.removeChair(chairLL, node);
+                    counter++;
+
+                    //track last deleted node
+                    lastDeletedNode = Object.assign(node);
+                    node = Object.assign(josephus.getNextChair(chairLL, counter, lastDeletedNode));
+                } else {
+                    clearInterval(intervalID);
+                    josephus.displayResults(chairCounter, node.data);
+                }
             }
         }, milliseconds);
     });
 
 
     $('#btn_singleStep').click(function () {
-        var chairCounter = $('#chairsCount').val();
+        var chairCounter = $('#input_chairsCount').val();
 
         // run single step delete simulation
-        var node;
 
         //get start node
         if (counter == 1) {
-            node = chairLL.head;
+            node = Object.assign(chairLL.head);
         } else {
-            node = josephus.getNextChair(chairLL, counter, lastDeletedNode);
+            node = Object.assign(josephus.getNextChair(chairLL, counter, lastDeletedNode));
         }
 
         //if list size > 1 delete node
@@ -85,8 +100,8 @@ $(document).ready(function() {
             chairLL = josephus.removeChair(chairLL, node);
             counter++;
 
-            //track the deleted node so we can pass it back in for single steps
-            lastDeletedNode = node;
+            //track the deleted node
+            lastDeletedNode = Object.assign(node);
         } else {
             josephus.displayResults(chairCounter, node.data);
         }
@@ -94,15 +109,17 @@ $(document).ready(function() {
 
 
     $('#btn_reset').click(function () {
-        $('#chairsCount').val(defaultChairs);
-        $('#milliseconds').val(defaultMS);
+        $('#input_chairsCount').val(defaultChairs);
+        $('#input_milliseconds').val(defaultMS);
+        $('#btn_runSimulation').html('Run Simulation').addClass('pause');
         $('.output_block').html('');
 
         counter = 1;
+        intervalID = '';
+        lastDeletedNode = Object.assign({});
         josephus.loadChairs(defaultChairs);
         chairLL = josephus.createLinkedList(defaultChairs);
     });
-
 });
 
 
@@ -168,6 +185,7 @@ var josephus = (function(){
     function _displayResults(count, data) {
         // single data is the last survivor
         console.log('last person alive: ' + data);
+        $('#btn_runSimulation').html('Run Simulation').addClass('pause');
         $('.output_block').html('Final survivor for a count of ' + count + ' chairs is ' + data);
     }
 
@@ -177,8 +195,6 @@ var josephus = (function(){
         removeChair:        _removeChair,
         getNextChair:       _getNextChair,
         displayResults:     _displayResults
-
-
     }
 })();
 
