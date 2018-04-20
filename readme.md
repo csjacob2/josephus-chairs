@@ -23,12 +23,12 @@ chairs provided. This field should default to 100.
 ## Solution Notes
 1. Developed in: Chrome, tested on iPad and iPhone. Many thanks to StackOverflow for hints and answers on some tough parts.
 
-2. Implements a circular linked list data structure to represent the chairs object. This allows the ability to traverse in a circular pattern, delete each chair and find the next chair easily, as well as loop around.  I actually came up with the circular linked list solution on my own but found out others had used the data structure as a solution before when I was researching some information for this code. Boooo. I'm using my own personal circularLinkedList.js data structure I wrote a few months ago, although I had to write a new function for this particular assignment (`traverse`) since I needed it for this puzzle.
+2. Implements a circular linked list data structure to represent the chairs object. This allows the ability to traverse in a circular pattern, delete each chair and find the next chair easily, as well as loop around.  Using my own personal circularLinkedList.js data structure, although had to write a new function for this particular assignment (`traverse`).
 
 3. The initial Josephus algorithm wasn't difficult to solve at first, but turning it into a visual representation with the ability to influence it with a timer (through `setInterval`, pause, and step, as well as allow each of these abilities to influence each other without losing the pointer in the linked list was the major challenge). It required ripping apart the original algorithm solution and turning it into separate pieces (createLinkedList, removeChair, getNextChair).
 
 4. Most of the complications arose from tracking the timing of setInterval and making sure there wasn't more than one timer running at a time (this happened several times before it was isolated). Other complications that came up:
     - Objects set equal to each other instead of assigned to a new variable, which only passed a reference to the original object, causing errors
     - small scoping issues that slipped through
-    - visual issue with the numbers not aligning with the chairs (decided this was a small thing thing to not bother with, but could likely to be fixed by grouping the index number and chair image into one HTML tag and applying the transformation on it together instead of separately
+    - visual issue with the numbers not aligning with the chairs (decided this was a small thing thing to not bother with)
     - getting the chairs to build into a dynamically sized circle (limited to a max size) took some searching initially but was pretty easy, there's possibly an easier way with mixins or equations in LESS but I threw the calculations into Javascript since I felt it was easier to grab the value from the input and calculate the dimensions that way
