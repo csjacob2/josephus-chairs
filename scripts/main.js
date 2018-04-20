@@ -25,17 +25,7 @@ $(document).ready(function() {
         if (chairCounter < 1 || chairCounter > 1000) {
             $('.output_block').html('Chairs count out of range (must be between 1 and 1000)');
         } else {
-            // this acts as a reset
-            $('.output_block').html('');
-            $('#btn_runSimulation').html('Run Simulation');
-
-            clearInterval(intervalID);
-            counter = 1;
-            isPaused = true;
-            lastDeletedNode = {};
-
-            josephus.loadChairs(chairCounter);
-            chairLL = josephus.createLinkedList(chairCounter);
+            resetSimulation(chairCounter, milliseconds);
         }
     });
 
@@ -126,14 +116,7 @@ $(document).ready(function() {
         $('#btn_runSimulation').html('Run Simulation').addClass('pause');
         $('.output_block').html('');
 
-        counter = 1;
-        isPaused = true;
-        milliseconds = defaultMS;
-        lastDeletedNode = {};
-        josephus.loadChairs(defaultChairs);
-        chairLL = josephus.createLinkedList(defaultChairs);
-        clearInterval(intervalID);
-        initSimulation(milliseconds);
+        resetSimulation(defaultChairs, defaultMS);
     });
 
 
@@ -171,6 +154,21 @@ $(document).ready(function() {
         isPaused = true;
         $('#btn_runSimulation').html('Run Simulation');
         $('btn_runSimulation').trigger('click');
+    }
+
+    function resetSimulation(chairCount, ms) {
+
+        $('.output_block').html('');
+        $('#btn_runSimulation').html('Run Simulation');
+
+        counter = 1;
+        isPaused = true;
+        milliseconds = ms;
+        lastDeletedNode = {};
+        josephus.loadChairs(chairCount);
+        chairLL = josephus.createLinkedList(chairCount);
+        clearInterval(intervalID);
+        initSimulation(milliseconds);
     }
 });
 
